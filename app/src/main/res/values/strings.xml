@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">HW_6_WEATHER</string>
+    <string name="app_name">Погода</string>
+    <string name="exception_parser_message">Ошибка при загрузке XML-документа: </string>
 </resources>
