@@ -18,12 +18,9 @@ public class CountryData {
         public ArrayList<CityData> getCityList() {
             return cityList;
         }
-        public CityData getLastCity() {
-            return cityList.get(cityList.size()-1);
-        }
 
-        public void addCity(String city, int id, String country){
-            CityData cityData = new CityData(city, id, country);
+        public void addCity(String city, int id){
+            CityData cityData = new CityData(city, id);
             cityList.add(cityData);
         }
     }

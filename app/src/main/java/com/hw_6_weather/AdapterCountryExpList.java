@@ -10,12 +10,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class CountryExpListAdapter extends BaseExpandableListAdapter {
+public class AdapterCountryExpList extends BaseExpandableListAdapter {
 
     ArrayList<CountryData> countryList;
     private Context context;
 
-    CountryExpListAdapter(Context context, ArrayList<CountryData> countryList){
+    AdapterCountryExpList(Context context, ArrayList<CountryData> countryList){
         this.countryList = countryList;
         this.context = context;
     }

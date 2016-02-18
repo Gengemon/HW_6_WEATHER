@@ -1,37 +1,55 @@
 package com.hw_6_weather;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements ExpandableListView.OnChildClickListener {
+public class MainActivity extends AppCompatActivity{
 
     ExpandableListView expandableListView;
-    CountryExpListAdapter countryExpListAdapter;
+    AdapterCountryExpList countryExpListAdapter;
+
+    private Fragment fragment1;
+    private Fragment fragment2;
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ParserXMLToCountryData pars = new ParserXMLToCountryData(this);
+        fragment1 = new FragmentListCities();
+        fragment2 = new FragmentWeather();
 
-        countryExpListAdapter = new CountryExpListAdapter(getApplicationContext(),pars.getCountryList());
-        expandableListView = (ExpandableListView) findViewById(R.id.expandable_list_view);
-        expandableListView.setAdapter(countryExpListAdapter);
+        transaction = getFragmentManager().beginTransaction();
 
-        expandableListView.setOnChildClickListener(this);
+        transaction.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_right);
+
+        transaction.replace(R.id.fragment, fragment1);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
-    @Override
-    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        String city = countryExpListAdapter.getChild(groupPosition,childPosition).getCity();
-        Long city_id = countryExpListAdapter.getChildId(groupPosition, childPosition);
+    public void onClick(View v){
+        transaction = getFragmentManager().beginTransaction();
 
-        Toast.makeText(getApplicationContext(), city + " " + city_id, Toast.LENGTH_SHORT).show();
-        //citySelectedCallback.onFragmentInteraction(guid);
-        return true;
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_right);
+
+        if(fragment1.isVisible()){
+            transaction.replace(R.id.fragment, fragment2);
+            Log.i("parser", "fragment2");
+        }else{
+            transaction.replace(R.id.fragment, fragment1);
+            Log.i("parser", "fragment1");
+        }
+        transaction.commit();
     }
+
 }

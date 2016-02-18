@@ -5,16 +5,13 @@ public class CityData {
         private String city;
         private int id;
 
-        public CityData (String city, int id, String country) {
+        public CityData (String city, int id) {
             this.city = city;
             this.id = id;
         }
 
         public String getCity() {
             return city;
-        }
-        public void setCity(String city){
-            this.city = city;
         }
 
         public int getId() {
