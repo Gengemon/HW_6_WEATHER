@@ -20,19 +20,19 @@ public class Loader {
 
     }
 
-    public static String downloadData(Long cityId) throws IOException {
+    public static String downloadData(String urlCityXML) throws IOException {
         InputStream inputStream = null;
-        String urlCity = null;
-        String inputStreamXML = null;
-        String stringXML = null;
         try {
-            URL url = new URL(urlCity);
+            URL url = new URL(urlCityXML);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            Log.i("downloadData", "url.openConnection()");
             httpURLConnection.setConnectTimeout(10000);
             httpURLConnection.connect();
+            Log.i("downloadData", "connect()");
             inputStream = httpURLConnection.getInputStream();
-            Log.i("Loader", "Downloaded XML");
+            Log.i("downloadData", "Download url");
             return IOUtils.toString(inputStream, "UTF-8");
+            //return "222";
         } finally {
             if (inputStream != null) {
                 inputStream.close();

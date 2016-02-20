@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Погода</string>
     <string name="exception_parser_message">Ошибка при загрузке XML-документа: </string>
+    <string name="weather_temperature_label">Температура: </string>
+    <string name="weather_wind_speed_label">Ветер: </string>
+    <string name="weather_type_label">Тип: </string>
+    <string name="connection_error_title">Ошибка подключения</string>
+    <string name="connection_error_message">Не удалось подключиться к интернету</string>
 </resources>

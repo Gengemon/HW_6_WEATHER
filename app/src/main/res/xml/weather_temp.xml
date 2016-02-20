@@ -4,7 +4,7 @@
         <station lang="en" distance="7">Zhulyany</station>
         <observation_time>2016-02-16T03:00:00</observation_time>
         <uptime>2016-02-16T03:34:47</uptime>
-        <temperature color="F4F1E0" plate="f5e8a2">9</temperature>
+        <temperature color="F43355" plate="f5e8a2">9</temperature>
         <weather_condition code="overcast"/>
         <image type="1">n5</image>
         <image-v2 color="a29652" type="colored">ovc_+10</image-v2>
