@@ -1,6 +1,7 @@
 package com.hw_6_weather;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,6 @@ public class AdapterCountryExpList extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item_group, null);
         }
-
         TextView textGroup = (TextView) convertView.findViewById(R.id.text_group);
         textGroup.setText(getGroup(groupPosition).getCountry());
 
@@ -74,9 +74,8 @@ public class AdapterCountryExpList extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item_child, null);
         }
-
         TextView textChild = (TextView) convertView.findViewById(R.id.text_child);
-        textChild.setText(getChild(groupPosition,childPosition).getCity());
+        textChild.setText(getChild(groupPosition, childPosition).getCity());
 
         return convertView;
     }
@@ -85,4 +84,18 @@ public class AdapterCountryExpList extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    public int getGroupPositionByCityId(long cityId){
+        int groupPosition=0;
+        for(int i=0;i<countryList.size();i++){
+            for(int ii=0;ii<countryList.get(i).getCityList().size();ii++){
+                if(countryList.get(i).getCityList().get(ii).getId()==cityId){
+                    groupPosition=i;
+                    return groupPosition;
+                }
+            }
+        }
+        return groupPosition;
+    }
+
 }

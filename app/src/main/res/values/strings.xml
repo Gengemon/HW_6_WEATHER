@@ -6,4 +6,6 @@
     <string name="weather_type_label">Тип: </string>
     <string name="connection_error_title">Ошибка подключения</string>
     <string name="connection_error_message">Не удалось подключиться к интернету</string>
+    <string name="view_by_start">Показывать при запуске</string>
+    <string name="detail">Подробнее >>></string>
 </resources>

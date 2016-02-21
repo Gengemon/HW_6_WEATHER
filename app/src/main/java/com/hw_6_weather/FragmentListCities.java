@@ -1,9 +1,7 @@
 package com.hw_6_weather;
 
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,28 +26,29 @@ public class FragmentListCities extends Fragment  implements ExpandableListView.
         expandableListView = (ExpandableListView) viewFragment.findViewById(R.id.expandable_list_view);
         expandableListView.setAdapter(countryExpListAdapter);
         expandableListView.setOnChildClickListener(this);
-
         try {
             onFragmentInteractionListener = (OnFragmentInteractionListener) this.getActivity();
-            Log.i("onFragmentInteraction", " (OnFragmentInteractionListener) activity");
+
         } catch (ClassCastException e) {
             throw new ClassCastException(this.getActivity().toString()
                     + " The MainActivity activity must " +
                     "implement OnContactSelectedListener");
         }
-        Log.i("onFragmentInteraction", " onAttach end");
+
+        //read default city id from settings and open group in expandable list
+        long cityId=((MainApplication) getActivity().getApplication()).getSettings().getCityId();
+        int groupPosition = countryExpListAdapter.getGroupPositionByCityId(cityId);
+        expandableListView.expandGroup(groupPosition);
+        expandableListView.setSelectedGroup(groupPosition);
+
         return viewFragment;
     }
 
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        String city = countryExpListAdapter.getChild(groupPosition,childPosition).getCity();
         Long cityId = countryExpListAdapter.getChildId(groupPosition, childPosition);
-
-        Log.i("onFragmentInteraction", " before onChildClick");
-        //Toast.makeText(getActivity(),"cityId = " + cityId.toString(),Toast.LENGTH_SHORT).show();
+        Log.i("FragmentListCities.onChildClick", " cityId = " + cityId + ", groupPosition=" + groupPosition + ", childPosition=" + childPosition+", id="+id);
         onFragmentInteractionListener.onFragmentInteraction(cityId);
-        Log.i("onFragmentInteraction", "after onChildClick");
         return true;
     }
 

@@ -13,14 +13,12 @@ import java.util.ArrayList;
 
 public class ParserXML {
 
-
     public static final String URL_XML_WEATHER_DATA = "http://export.yandex.ru/weather-ng/forecasts/%d.xml";
 
     private static final String KEY_COUNTRY = "country";
     private static final String KEY_COUNTRY_NAME = "name";
     private static final String KEY_CITY = "city";
     private static final String KEY_CITY_ID = "id";
-
 
     private static final String KEY_WEATHER_CITY = "city";
     private static final String KEY_WEATHER_LINK = "link";
@@ -29,7 +27,6 @@ public class ParserXML {
     private static final String KEY_WEATHER_TEMPERATURE_COLOR = "color";
     private static final String KEY_WEATHER_TYPE = "weather_type";
     private static final String KEY_WEATHER_WIND_SPEED = "wind_speed";
-
 
     public ParserXML(){
 
@@ -49,14 +46,14 @@ public class ParserXML {
         try {
             XmlPullParser parser = context.getResources().getXml(xmlResourceId);
 
-            Log.i("parser", "Loaded XML");
+            Log.i("ParserXML.getCountryList", "Loaded XML");
             while (parser.getEventType()!= XmlPullParser.END_DOCUMENT) {
                 if (parser.getEventType() == XmlPullParser.START_TAG
                         && parser.getName().equals(KEY_COUNTRY)) {
                     country = parser.getAttributeValue(null, KEY_COUNTRY_NAME);
                     countryData = new CountryData(country);
                     countryList.add(countryData);
-                    Log.i("parser.country", country);
+                    Log.i("ParserXML.getCountryList","country = "+country);
                 }
                 if (parser.getEventType() == XmlPullParser.START_TAG
                         && parser.getName().equals(KEY_CITY)) {
@@ -65,7 +62,7 @@ public class ParserXML {
                     if ( parser.getEventType() == XmlPullParser.TEXT ){
                         city = parser.getText();
                         countryList.get(countryList.size()-1).addCity(city, id);
-                        Log.i("parser.city id", city + " " +  id);
+                        Log.i("ParserXML.getCountryListd","city  = " + city + " id = " +  id);
                     }
                 }
                 parser.next();
@@ -87,35 +84,35 @@ public class ParserXML {
             BufferedReader reader = new BufferedReader(new StringReader(xmlData));
             parser.setInput(reader);
 
-            Log.i("parser.weather", "Loaded XML weather");
+            Log.i("ParserXML.getWeatherInfo", "Loaded XML weather");
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
                 if(parser.getEventType()==XmlPullParser.START_TAG && parser.getName().equals(KEY_WEATHER_FORECAST)){
                     weatherData.setLink(parser.getAttributeValue(null, KEY_WEATHER_LINK));
-                    Log.i("parser.weather", weatherData.getLink());
+                    Log.i("ParserXML.getWeatherInfo.weather", weatherData.getLink());
                     weatherData.setCity(parser.getAttributeValue(null, KEY_WEATHER_CITY));
-                    Log.i("parser.weather", weatherData.getCity());
+                    Log.i("ParserXML.getWeatherInfo.weather", weatherData.getCity());
                 }
                 if(parser.getEventType()==XmlPullParser.START_TAG && parser.getName().equals(KEY_WEATHER_TEMPERATURE)){
                     weatherData.setTemperatureColor(parser.getAttributeValue(null, KEY_WEATHER_TEMPERATURE_COLOR));
-                    Log.i("parser.weather", weatherData.getTemperatureColor());
+                    Log.i("ParserXML.getWeatherInfo.weather", weatherData.getTemperatureColor());
                     parser.next();
                     if (parser.getEventType() == XmlPullParser.TEXT){
                         weatherData.setTemperature(parser.getText());
-                        Log.i("parser.weather", weatherData.getTemperature());
+                        Log.i("ParserXML.getWeatherInfo.weather", weatherData.getTemperature());
                     }
                 }
                 if (parser.getEventType()==XmlPullParser.START_TAG && parser.getName().equals(KEY_WEATHER_TYPE)){
                     parser.next();
                     if (parser.getEventType() == XmlPullParser.TEXT) {
                         weatherData.setWeatherType(parser.getText());
-                        Log.i("parser.weather", weatherData.getWeatherType());
+                        Log.i("ParserXML.getWeatherInfo.weather", weatherData.getWeatherType());
                     }
                 }
                 if (parser.getEventType()==XmlPullParser.START_TAG && parser.getName().equals(KEY_WEATHER_WIND_SPEED)){
                     parser.next();
                     if (parser.getEventType() == XmlPullParser.TEXT) {
                         weatherData.setWindSpeed(parser.getText());
-                        Log.i("parser.weather", weatherData.getWindSpeed());
+                        Log.i("ParserXML.getWeatherInfo.weather", weatherData.getWindSpeed());
                         break;
                     }
                 }
@@ -126,7 +123,6 @@ public class ParserXML {
             t.printStackTrace();
         }
 
-        Log.i("parser.weather", "Parsed XML weather");
         return weatherData;
     }
 }

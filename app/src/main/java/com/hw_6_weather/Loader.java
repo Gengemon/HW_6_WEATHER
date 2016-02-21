@@ -15,7 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Loader {
-
+    private static final int CONNECT_TIMEOUT = 10000;
     public Loader() {
 
     }
@@ -25,14 +25,10 @@ public class Loader {
         try {
             URL url = new URL(urlCityXML);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            Log.i("downloadData", "url.openConnection()");
-            httpURLConnection.setConnectTimeout(10000);
+            httpURLConnection.setConnectTimeout(CONNECT_TIMEOUT);
             httpURLConnection.connect();
-            Log.i("downloadData", "connect()");
             inputStream = httpURLConnection.getInputStream();
-            Log.i("downloadData", "Download url");
             return IOUtils.toString(inputStream, "UTF-8");
-            //return "222";
         } finally {
             if (inputStream != null) {
                 inputStream.close();

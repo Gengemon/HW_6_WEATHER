@@ -175,4 +175,17 @@
         android:text="Подробнее>>"
         android:layout_marginTop="4dp"
         />
+    <CheckBox
+        android:id="@+id/checkbox_default_city"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textAlignment="viewStart"
+        android:background="@drawable/item_click_selector_group"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="@string/view_by_start"
+        android:checked="false"
+        android:layout_marginTop="4dp"
+        />
 </LinearLayout>

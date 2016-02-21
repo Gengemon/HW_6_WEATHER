@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -22,22 +23,25 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
 
     private View viewFragment;
     private WeatherData weatherData;
+    long defaultCityId;
+    long cityId;
+
     private OnFragmentInteractionListenerWeather onFragmentInteractionListenerWeather;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewFragment = inflater.inflate(R.layout.fragment_weather, container, false);
-
+        defaultCityId=((MainApplication) getActivity().getApplication()).getSettings().getCityId();
         Button buttonGoWeatherWeb = (Button) viewFragment.findViewById(R.id.button_go_weather_web);
         buttonGoWeatherWeb.setOnClickListener(this);
         try {
             onFragmentInteractionListenerWeather = (OnFragmentInteractionListenerWeather) this.getActivity();
-            Log.i("onFragmentInteraction", " (OnFragmentInteractionListenerWeather) activity");
+            Log.i("FragmentWeather", " (OnFragmentInteractionListenerWeather) activity");
         } catch (ClassCastException e) {
             throw new ClassCastException(this.getActivity().toString()
                     + " The MainActivity activity must " +
                     "implement OnContactSelectedListener");
         }
-        //updateViewData(0);
         return viewFragment;
     }
 
@@ -47,8 +51,8 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
         // (0) get arguments +
         Bundle args = getArguments();
         if (args != null) {
-            long cityId = args.getLong(MainActivity.CITY_ID);
-            Log.i("weather", "cityId = "+cityId);
+            cityId = args.getLong(MainActivity.CITY_ID);
+            Log.i("FragmentWeather.onStart", "cityId = "+cityId);
             // (1) test internet connection
             ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -56,17 +60,15 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
             if (networkInfo != null && networkInfo.isConnected()) {
                 // (2) get URL city XML +
                 String urlCityXML = ParserXML.getUrlCityXML(cityId);
-                Log.i("weather", "getLinkCityXML = " + urlCityXML);
+                Log.i("FragmentWeather", "getLinkCityXML = " + urlCityXML);
                 // (3) load XML from internet +
-                XmlPullParser parser = null;
                 GetXMLData task;
                 String xmlData = null;
                 try {
                     task = new GetXMLData();
                     task.execute(urlCityXML);
-                    Log.i("weather", "task.get()");
                     xmlData = task.get();
-                    Log.i("weather", "task.get() = " + xmlData);
+                    Log.i("FragmentWeather", "task.get() = " + xmlData);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -75,7 +77,6 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
                 // (5) set data to view +
                 updateViewData(weatherData);
             } else {
-                //Toast.makeText(getActivity(), R.string.internet_connect_error, Toast.LENGTH_SHORT).show();
                 Dialog.showAlert(viewFragment.getContext(), R.string.connection_error_title, R.string.connection_error_message);
             }
         }
@@ -83,9 +84,21 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Log.i("FragmentWeather.onClick", "onClick =" + v.getId());
         if(v.getId()==R.id.button_go_weather_web){
             onFragmentInteractionListenerWeather.onFragmentInteractionWeather(weatherData.getLink());
         }
+    }
+
+    @Override
+    public void onDestroyView(){
+        CheckBox checkBoxDefaultCity = (CheckBox) viewFragment.findViewById(R.id.checkbox_default_city);
+        if (checkBoxDefaultCity.isChecked()){
+            ((MainApplication)getActivity().getApplication()).getSettings().setCityId(cityId);
+            defaultCityId=cityId;
+            Log.i("FragmentWeather.onDestroyView", "setCityId(cityId) - " + cityId);
+        }
+        super.onDestroyView();
     }
 
     public class GetXMLData extends AsyncTask<String, Integer, String> {
@@ -94,11 +107,8 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
         protected String doInBackground(String... url) {
             String loadXML;
             try {
-                Log.i("weather.doInBackground", "url =" + url[0]);
+                Log.i("FragmentWeather.doInBackground", "url =" + url[0]);
                 loadXML = Loader.downloadData(url[0]);
-                Log.i("weather.downloadData", "url =" + url[0]);
-                //mUrl = getLinkToSiteForCity(res);
-                //Log.i(LOG_TAG, "url " + " after pull parser" + mUrl);
                 return loadXML;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -109,15 +119,13 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.i("weather", "onPostExecute");
-            //if (mIsWebViewAvailable) getWebView().loadUrl(mUrl);
-            //else Log.w("weather", "WebView cannot be found. Check the view and fragment have been loaded.");
+            Log.i("FragmentWeather", "onPostExecute");
         }
     }
     private void updateViewData(WeatherData weatherData){
         TextView textCity = (TextView)  viewFragment.findViewById(R.id.weather_city);
         textCity.setText(weatherData.getCity());
-        Log.i("weather", "weather_city = " + weatherData.getCity());
+        Log.i("FragmentWeather.updateViewData", "weather_city = " + weatherData.getCity());
 
         TextView textLink = (TextView) viewFragment.findViewById(R.id.weather_link);
         textLink.setText(weatherData.getLink());
@@ -133,6 +141,9 @@ public class FragmentWeather extends Fragment implements View.OnClickListener {
 
         TextView textWindSpeed = (TextView) viewFragment.findViewById(R.id.weather_wind_speed);
         textWindSpeed.setText(weatherData.getWindSpeed().toString());
+
+        CheckBox checkBoxDefaultCity = (CheckBox) viewFragment.findViewById(R.id.checkbox_default_city);
+        checkBoxDefaultCity.setChecked(cityId==defaultCityId);
     }
 
     public interface OnFragmentInteractionListenerWeather {
